@@ -1,0 +1,387 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d95f948e92d20ee41aaeaa7688f0b1eb, type: 3}
+  m_Name: RoleConfig
+  m_EditorClassIdentifier: 
+  roleInfoList:
+  - roleId: 1
+    name: "\u7EA2\u7360\u6697\u536B"
+    quality: 1
+    campId: 1
+    path: TwoHandsSword01
+    desc: "\u82F1\u96C4\u7B80\u4ECB1"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 2
+    name: "\u7FE1\u7FE0\u54E8\u5175"
+    quality: 1
+    campId: 1
+    path: Tint_TwoHandsSword01
+    desc: "\u82F1\u96C4\u7B80\u4ECB2"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 3
+    name: "\u82CD\u89D2\u7A81\u51FB\u8005"
+    quality: 2
+    campId: 1
+    path: TwoHandsSword02
+    desc: "\u82F1\u96C4\u7B80\u4ECB3"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 4
+    name: "\u8910\u94C1\u89D2\u536B"
+    quality: 1
+    campId: 1
+    path: TwoHandsSword03
+    desc: "\u82F1\u96C4\u7B80\u4ECB4"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 5
+    name: "\u8D64\u53D1\u884C\u8005"
+    quality: 2
+    campId: 1
+    path: TwoHandsSword04
+    desc: "\u82F1\u96C4\u7B80\u4ECB5"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 6
+    name: "\u591C\u5203\u6E38\u9A91"
+    quality: 2
+    campId: 1
+    path: TwoHandsSword05
+    desc: "\u82F1\u96C4\u7B80\u4ECB6"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 7
+    name: "\u91D1\u8292\u65C5\u8005"
+    quality: 1
+    campId: 2
+    path: DoubleSword01
+    desc: "\u82F1\u96C4\u7B80\u4ECB7"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 8
+    name: "\u84DD\u89D2\u7684\u96F7\u5C14"
+    quality: 3
+    campId: 2
+    path: DoubleSword02
+    desc: "\u82F1\u96C4\u7B80\u4ECB8"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 9
+    name: "\u7EA2\u7FFC\u7684\u83B1\u4FEE"
+    quality: 3
+    campId: 2
+    path: DoubleSword03
+    desc: "\u82F1\u96C4\u7B80\u4ECB9"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 10
+    name: "\u96F7\u5965"
+    quality: 3
+    campId: 2
+    path: DoubleSword04
+    desc: "\u82F1\u96C4\u7B80\u4ECB10"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 11
+    name: "\u7D2B\u5F71\u730E\u624B"
+    quality: 2
+    campId: 2
+    path: DoubleSword05
+    desc: "\u82F1\u96C4\u7B80\u4ECB11"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 12
+    name: "\u9752\u5CA9\u7684\u51EF\u6069"
+    quality: 1
+    campId: 2
+    path: Tint_DoubleSword01
+    desc: "\u82F1\u96C4\u7B80\u4ECB12"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 13
+    name: "\u6797\u91CE\u6E38\u730E\u8005"
+    quality: 1
+    campId: 3
+    path: Bow01
+    desc: "\u82F1\u96C4\u7B80\u4ECB13"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 14
+    name: "\u84DD\u7FCE\u536B\u6258\u4F26"
+    quality: 3
+    campId: 3
+    path: Bow02
+    desc: "\u82F1\u96C4\u7B80\u4ECB14"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 15
+    name: "\u8D64\u53D1\u5F13\u624B\u7F57\u4F0A"
+    quality: 1
+    campId: 3
+    path: Bow03
+    desc: "\u82F1\u96C4\u7B80\u4ECB15"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 16
+    name: "\u7A79\u9876\u7684\u51EF\u56E0"
+    quality: 3
+    campId: 3
+    path: Bow04
+    desc: "\u82F1\u96C4\u7B80\u4ECB16"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 17
+    name: "\u70EC\u706B\u730E\u624B"
+    quality: 2
+    campId: 3
+    path: Bow05
+    desc: "\u82F1\u96C4\u7B80\u4ECB17"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 18
+    name: "\u76D6\u91CC\u514B"
+    quality: 3
+    campId: 3
+    path: Tint_Bow01
+    desc: "\u82F1\u96C4\u7B80\u4ECB18"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 19
+    name: "\u7D2B\u5E3D\u7684\u6885\u6797"
+    quality: 3
+    campId: 4
+    path: MagicWand01
+    desc: "\u82F1\u96C4\u7B80\u4ECB19"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 20
+    name: "\u91D1\u7802\u5DEB\u65C5"
+    quality: 1
+    campId: 4
+    path: MagicWand02
+    desc: "\u82F1\u96C4\u7B80\u4ECB20"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 21
+    name: "\u7A79\u9876\u5492\u672F\u5E08"
+    quality: 2
+    campId: 4
+    path: MagicWand03
+    desc: "\u82F1\u96C4\u7B80\u4ECB21"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 22
+    name: "\u8D64\u7FFC\u7684\u96F7\u7EB3"
+    quality: 3
+    campId: 4
+    path: MagicWand04
+    desc: "\u82F1\u96C4\u7B80\u4ECB22"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 23
+    name: "\u6D1B\u8428"
+    quality: 2
+    campId: 4
+    path: MagicWand05
+    desc: "\u82F1\u96C4\u7B80\u4ECB23"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 24
+    name: "\u5251\u76FE1"
+    quality: 1
+    campId: 5
+    path: ForExternalAnimations
+    desc: "\u82F1\u96C4\u7B80\u4ECB24"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 25
+    name: "\u5251\u76FE2"
+    quality: 2
+    campId: 5
+    path: SwordShield01
+    desc: "\u82F1\u96C4\u7B80\u4ECB25"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 26
+    name: "\u5251\u76FE3"
+    quality: 3
+    campId: 5
+    path: SwordShield02
+    desc: "\u82F1\u96C4\u7B80\u4ECB26"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 27
+    name: "\u5251\u76FE4"
+    quality: 1
+    campId: 5
+    path: SwordShield03
+    desc: "\u82F1\u96C4\u7B80\u4ECB27"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 28
+    name: "\u5251\u76FE5"
+    quality: 2
+    campId: 5
+    path: SwordShield04
+    desc: "\u82F1\u96C4\u7B80\u4ECB28"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 29
+    name: "\u5251\u76FE6"
+    quality: 3
+    campId: 5
+    path: SwordShield05
+    desc: "\u82F1\u96C4\u7B80\u4ECB29"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 30
+    name: "\u5251\u76FE7"
+    quality: 1
+    campId: 5
+    path: Tint_SwordShield01
+    desc: "\u82F1\u96C4\u7B80\u4ECB30"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
+  - roleId: 31
+    name: "\u5251\u76FE8"
+    quality: 2
+    campId: 5
+    path: Tint_SwordShield02
+    desc: "\u82F1\u96C4\u7B80\u4ECB31"
+    hp: 100
+    moveSpeed: 4
+    runSpeed: 6
+    jumpSpeed: 5
+    idleTime: 2
+    attackDic: 4.5
