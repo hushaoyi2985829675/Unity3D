@@ -77,19 +77,19 @@ public class LoadExcel
             {
                 worksheet = excelPackage.Workbook.Worksheets[i];
                 StringBuilder scriptFIle = new StringBuilder();
-                headType = "";   
+                headType = "";
                 List<StringBuilder> classStrList = new List<StringBuilder>();
                 //先把第一行循环一遍创建出数据结构
                 for (int k = 1; k <= worksheet.Dimension.Columns; k++)
                 {
-                     StringBuilder sb = Create(worksheet,k);
-                     classStrList.Add(sb);
+                    StringBuilder sb = Create(worksheet, k);
+                    classStrList.Add(sb);
                 }
                 scriptFIle.AppendLine("using System.Collections.Generic;\nusing UnityEngine;");
                 scriptFIle.AppendLine();
                 scriptFIle.AppendLine("namespace " + worksheet.Name + "Ns");
                 scriptFIle.AppendLine("{");
-                foreach (var classStr in classStrList )
+                foreach (var classStr in classStrList)
                 {
                     scriptFIle.Append(classStr.ToString());
                 }
@@ -98,12 +98,12 @@ public class LoadExcel
                 scriptFIle.AppendLine("\tpublic class " + worksheet.Name + "Config: ScriptableObject");
                 scriptFIle.AppendLine("\t{");
                 string headName = char.ToLower(headType[0]) + headType.Substring(1) + "List";
-                scriptFIle.AppendLine(string.Format("\t\tpublic List<{0}> {1} = new List<{2}>();",headType,headName,headType));
+                scriptFIle.AppendLine(string.Format("\t\tpublic List<{0}> {1} = new List<{2}>();", headType, headName, headType));
                 scriptFIle.AppendLine("\t}");
                 scriptFIle.AppendLine("}");
                 string filePath = Application.dataPath + "/Resources/Configs/ExcelScript/" + worksheet.Name + "Config.cs";
                 // 创建文件并写入内容，若文件已存在则会覆盖
-                if (!File.Exists(filePath)) 
+                if (!File.Exists(filePath))
                 {
                     FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate);
                     fileStream.Close();
@@ -111,9 +111,21 @@ public class LoadExcel
                 File.WriteAllText(filePath, scriptFIle.ToString());
             }
 
+
             // 刷新触发编译，后续的 ScriptableObject 创建和数据导入放到编译完成回调中
             AssetDatabase.Refresh();
-            EnqueueExcelForPostCompile(path);
+            
+            string fullTypeName = string.Format("{0}.{1}, Assembly-CSharp", worksheet.Name + "Ns", worksheet.Name + "Config");
+            Type t = Type.GetType(fullTypeName);
+            if (t == null)
+            {
+                EnqueueExcelForPostCompile(path);
+            }
+            else
+            {
+                pendingExcelPaths.Enqueue(path);
+                OnCompilationFinished(null);
+            }
         }
     }
 

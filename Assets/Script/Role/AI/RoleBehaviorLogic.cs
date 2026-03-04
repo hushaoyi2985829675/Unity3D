@@ -2,19 +2,47 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using RoleNs;
-using UnityEditor;
 using UnityEngine;
+
+public class RoleState
+{
+    public Action OnEnter;
+    public Action OnUpdate;
+    public Action OnExit;
+
+    public RoleState(Action onEnter, Action onUpdate, Action onExit)
+    {
+        OnEnter = onEnter;
+        OnUpdate = onUpdate;
+        OnExit = onExit;
+    }
+
+    public void Enter()
+    {
+        OnEnter?.Invoke();
+    }
+
+    public void Update()
+    {
+        OnUpdate?.Invoke();
+    }
+
+    public void Exit()
+    {
+        OnExit?.Invoke();
+    }
+}
 
 public class RoleBehaviorLogic : MonoBehaviour
 {
     private CharacterAIBase characterAI;
     private Animator animator;
-
+    private AnimationEvent animationEvent;
     //状态机
-    private Dictionary<PlayerState, RoleStateBase> roleStateList;
+    private Dictionary<PlayerState, RoleState> roleStateList;
 
     [SerializeField]
-    private PlayerState curState = PlayerState.Jump;
+    private PlayerState curState = PlayerState.Idle;
 
     //状态
     private PlayerState playerState;
@@ -24,35 +52,63 @@ public class RoleBehaviorLogic : MonoBehaviour
     protected float localIdleTime;
     protected RoleInfo roleInfo;
     private GameObject target;
-    
+
     //追击更新频率
     private float chaseUpdateInterval = 0.3f;
     private float localChaseUpdateInterval = 0;
-    
+
+    //攻击间隔
+    [Header("攻击间隔")]
+    [SerializeField]
+    private float attackInterval = 0.5f;
+    private float localAttackInterval = 0;
+    private bool isAttack;
+
     private void Awake()
     {
-        roleStateList = new Dictionary<PlayerState, RoleStateBase>();
+        roleStateList = new Dictionary<PlayerState, RoleState>();
         characterAI = GetComponent<CharacterAIBase>();
         animator = GetComponent<Animator>();
+        animationEvent = GetComponent<AnimationEvent>();
     }
 
     void Start()
     {
         roleInfo = characterAI.GetRoleInfo();
         idleTime = roleInfo.idleTime;
-        roleStateList.Add(PlayerState.Idle, new RoleIdleState(this));
-        roleStateList.Add(PlayerState.Walk, new RoleWalkState(this));
-        roleStateList.Add(PlayerState.Chase, new RoleChaseState(this));
+        roleStateList = new Dictionary<PlayerState, RoleState>();
+        roleStateList.Add(PlayerState.Idle,new RoleState(IdleEnter, IdleUpdate, IdleExit));
+        roleStateList.Add(PlayerState.Walk,new RoleState(OnWalkEnter, OnWalkUpdate, OnWalkExit));
+        roleStateList.Add(PlayerState.Chase,new RoleState(ChaseEnter, ChaseUpdate, ChaseExit));
+        roleStateList.Add(PlayerState.Attack,new RoleState(AttackEnter, AttackUpdate, AttackExit));
+        roleStateList[curState].Enter();
+        animationEvent.AddAnimationEvent(OnAnimationAction);
     }
 
     private void Update()
     {
-        if (characterAI.GetMonsterTarget() != null)
+        if (localAttackInterval > 0f)
         {
-            playerState = PlayerState.Chase;
+            localAttackInterval -= Time.deltaTime;
+            if (localAttackInterval <= 0f)
+            {
+                localAttackInterval = 0f;
+                characterAI.SetAttackStage(1);
+            }
         }
         ChangeState(playerState);
         roleStateList[curState].OnUpdate();
+    }
+
+    void OnAnimationAction(string eventName)
+    {
+        switch (eventName)
+        {
+            case "AttackEnd":
+                isAttack = false;
+                localAttackInterval = attackInterval;
+                break;
+        }
     }
 
     #region IdleSate
@@ -64,6 +120,11 @@ public class RoleBehaviorLogic : MonoBehaviour
 
     public virtual void IdleUpdate()
     {
+        if (characterAI.GetMonsterTarget() != null)
+        {
+            playerState = PlayerState.Chase;
+            return;
+        }
         localIdleTime += Time.deltaTime;
         if (localIdleTime >= idleTime)
         {
@@ -85,12 +146,17 @@ public class RoleBehaviorLogic : MonoBehaviour
         //随机出一个坐标
         Vector3 pos = Ui.Instance.GetRandomPointInCircle(transform.position, 10);
         characterAI.SetNavSpeed(roleInfo.moveSpeed);
-        // characterAI.SetStopDistance(0);
+        characterAI.SetStopDistance(0);
         characterAI.Move(new Vector3(transform.TransformPoint(pos).x, pos.y, transform.TransformPoint(pos).z));
     }
 
     public virtual void OnWalkUpdate()
     {
+        if (characterAI.GetMonsterTarget() != null)
+        {
+            playerState = PlayerState.Chase;
+            return;
+        }
         if (characterAI.CheckIfReachedDestination())
         {
             playerState = PlayerState.Idle;
@@ -106,7 +172,8 @@ public class RoleBehaviorLogic : MonoBehaviour
 
     #region ChaseState
 
-    //待机状态
+    //追击状态
+
     public virtual void ChaseEnter()
     {
         target = characterAI.GetMonsterTarget();
@@ -117,7 +184,7 @@ public class RoleBehaviorLogic : MonoBehaviour
         else
         {
             characterAI.SetNavSpeed(roleInfo.runSpeed);
-            // characterAI.SetStopDistance(roleInfo.attackDic);
+            characterAI.SetStopDistance(roleInfo.attackDic);
             characterAI.Move(target.transform.position);
             localChaseUpdateInterval = 0;
         }
@@ -128,16 +195,17 @@ public class RoleBehaviorLogic : MonoBehaviour
         target = characterAI.GetMonsterTarget();
         if (target != null)
         {
+            localChaseUpdateInterval = localChaseUpdateInterval + Time.deltaTime;
             //不要每帧更新
             if (localChaseUpdateInterval >= chaseUpdateInterval)
             {
                 characterAI.Move(target.transform.position);
+                localChaseUpdateInterval = 0;
             }
-            if (characterAI.CheckIfReachedDestination())
-            { 
+            if (FightTool.IsTargetInRange(transform, roleInfo.attackDic, target))
+            {
                 //攻击
                 playerState = PlayerState.Attack;
-                localChaseUpdateInterval = 0;
             }
         }
         else
@@ -148,6 +216,48 @@ public class RoleBehaviorLogic : MonoBehaviour
 
     public virtual void ChaseExit()
     {
+        localChaseUpdateInterval = 0;
+    }
+
+    #endregion
+
+    #region AttackState
+
+    //攻击状态
+
+    public virtual void AttackEnter()
+    {
+
+    }
+
+    public virtual void AttackUpdate()
+    { 
+        if(!isAttack)
+        {
+            if (FightTool.IsTargetInRange(transform, roleInfo.attackDic, target))
+            {
+                isAttack = true;
+                if (localAttackInterval > 0f && characterAI.GetAttackStage() < 2)
+                {  
+                    characterAI.SetAttackStage(characterAI.GetAttackStage() + 1);
+                }
+                else
+                {
+                    characterAI.SetAttackStage(1);
+                }
+                localAttackInterval = 0f;
+            }
+            else
+            {
+                playerState = PlayerState.Chase;
+            }
+        }
+    }
+
+    public virtual void AttackExit()
+    {
+        localAttackInterval = 0;
+        isAttack = false;
     }
 
     #endregion
@@ -162,13 +272,13 @@ public class RoleBehaviorLogic : MonoBehaviour
 
         if (roleStateList.ContainsKey(curState))
         {
-            RoleStateBase roleStateBase = roleStateList[curState];
-            roleStateBase.OnExit();
+            RoleState roleState = roleStateList[curState];
+            roleState.OnExit();
         }
 
         curState = state;
         roleStateList[curState].OnEnter();
-        animator.SetInteger("State", (int) curState);
+        animator.SetInteger("State", (int)curState);
     }
 
     // void OnDrawGizmos()

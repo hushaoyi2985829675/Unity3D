@@ -10,17 +10,17 @@ public enum PlayerState
 {
    Idle = 0,
    Walk,
-   // WalkBack,
-   // WalkLeft,
-   // WalkRight,
-   Chase,
+   WalkBack,
+   WalkLeft,
+   WalkRight,
    SwordShield,
    Jump,
-   Attack,
+   Attack = 7,
    Skill,
    Hit,
    Dizzy,
-   Slide,
+   Slide = 11,
+   Chase = 12,
 }
 
 public class CharacterState : MonoBehaviour

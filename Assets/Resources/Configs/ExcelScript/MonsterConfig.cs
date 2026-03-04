@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RoleNs
+namespace MonsterNs
 {
 
 	[System.Serializable]
-	public class RoleInfo
+	public class MonsterInfo
 	{
-		public int roleId;
+		public int monsterId;
 		public string name;
 		public int quality;
 		public int campId;
@@ -22,8 +22,8 @@ namespace RoleNs
 		public float attackSpeed;
 	}
 
-	public class RoleConfig: ScriptableObject
+	public class MonsterConfig: ScriptableObject
 	{
-		public List<RoleInfo> roleInfoList = new List<RoleInfo>();
+		public List<MonsterInfo> monsterInfoList = new List<MonsterInfo>();
 	}
 }

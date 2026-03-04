@@ -26,8 +26,11 @@ public class AnimationAI : MonoBehaviour
     {
         velocity = characterAI.GetVelocity();
         roleInfo = characterAI.GetRoleInfo();
+        animator.SetBool("Ground", characterAI.isGround);
         animator.SetFloat("VelocityZ", velocity.z / roleInfo.moveSpeed);
         animator.SetFloat("VelocityX", velocity.x / roleInfo.moveSpeed);
         animator.SetFloat("VelocityZAbs", Math.Abs(velocity.z) / roleInfo.moveSpeed);
+        animator.SetFloat("AttackSpeed", roleInfo.attackSpeed);
+        animator.SetInteger("AttackStage", characterAI.GetAttackStage());
     }
 }

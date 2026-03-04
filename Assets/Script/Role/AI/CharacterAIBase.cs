@@ -12,7 +12,7 @@ public class CharacterAIBase : MonoBehaviour
     private int roleId;
     private RoleCamp roleCamp;
     protected RoleInfo  roleInfo;
-    //脚本
+    //组件
     private Animator animator;
     private RoleBehaviorLogic roleBehaviorLogic;
     //状态
@@ -23,6 +23,12 @@ public class CharacterAIBase : MonoBehaviour
     [Header("目标")]
     [SerializeField]
     private GameObject target;
+    [SerializeField]
+    public bool isGround;
+    [SerializeField]
+    private int attackStage = 1;
+    private RaycastHit raycastHit;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -32,10 +38,9 @@ public class CharacterAIBase : MonoBehaviour
     
     void Start()
     {
-        
     }
     
-    public void InitRole(int id)
+    public virtual void InitRole(int id)
     {
         roleId = id;
         roleInfo = ConfigManager.Instance.GetRoleInfoById(id);
@@ -44,15 +49,28 @@ public class CharacterAIBase : MonoBehaviour
 
     private void Update()
     {
-        target = FightTool.FindNearestTargetByLayer(transform, 10f, "Monster");
+        // 当前目标为空，或已超出检测范围时，重新搜索最近目标
+        if (target == null || !FightTool.IsTargetInRange(transform, 10f, target))
+        {
+            target = FightTool.FindNearestTargetByLayer(transform, 10f, "Monster");
+        }
+    
         velocity = transform.InverseTransformDirection(navMeshAgent.velocity);
+        CheckRaycastr();
+    }
+
+    private void CheckRaycastr()
+    {
+        // 从角色中心点发射向下射线
+        raycastHit = FightTool.CheckRaycastHitByLayer(transform.position, Vector3.down, 0.5f, "Ground");
+        isGround = raycastHit.collider != null;
     }
 
     public RoleInfo GetRoleInfo()
     {
         return roleInfo;
     }
-    
+
     //获取导航速度
     public Vector3 GetVelocity()
     {
@@ -64,6 +82,17 @@ public class CharacterAIBase : MonoBehaviour
         return target;
     }
 
+    //攻击段数
+    public void SetAttackStage(int stage)
+    {
+        attackStage = Mathf.Min(2, Mathf.Max(1, stage));
+    }
+
+    public int GetAttackStage()
+    {
+        return attackStage;
+    }
+
     #region 导航操作
 
     //移动
@@ -71,7 +100,7 @@ public class CharacterAIBase : MonoBehaviour
     {
         navMeshAgent.SetDestination(pos);
     }
-    
+
     //是否到达
     public bool CheckIfReachedDestination()
     {
@@ -90,6 +119,7 @@ public class CharacterAIBase : MonoBehaviour
     {
         navMeshAgent.speed = speed;
     }
+
     //设置停止距离
     public void SetStopDistance(float distance)
     {
@@ -97,6 +127,7 @@ public class CharacterAIBase : MonoBehaviour
     }
 
     #endregion
+
     void OnDrawGizmos()
     {
         // if (!Application.isPlaying)
