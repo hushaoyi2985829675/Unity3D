@@ -1,11 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class FightTool 
 {
     /// <summary>
-    /// 
+    ///  搜索指定范围内的最近目标
     /// </summary>
     /// <param name="radius"> 半径 </param>
     /// <param name="layerName"> Layer名 </param>
@@ -96,10 +98,25 @@ public class FightTool
             1 << layerIndex,
             QueryTriggerInteraction.Ignore
         );
-        Debug.Log("hasHit: " + hasHit);
         Vector3 endPos = new Vector3(hit.point.x, hit.point.y - distance, hit.point.z);
         Debug.DrawLine(transformPos, endPos, hasHit ? Color.green : Color.red, 0.2f, false);
 
         return hit;
+    }
+
+    public static void LookAtTarget(Transform transform, Transform target,float speed,Action onComplete = null)
+    {
+        Vector3 direction = target.position - transform.position;
+        float signAngle = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
+        if(Mathf.Abs(signAngle) <= 10)
+        {
+            onComplete?.Invoke();
+            return;
+        }
+        transform.DORotate(new Vector3(0, signAngle, 0),Mathf.Abs(signAngle) / speed,RotateMode.LocalAxisAdd).OnComplete(() =>
+        {
+            transform.DOKill();
+            onComplete?.Invoke(); 
+        });
     }
 }

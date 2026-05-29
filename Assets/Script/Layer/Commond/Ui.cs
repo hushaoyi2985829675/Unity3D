@@ -79,6 +79,71 @@ public class Ui : Singleton<Ui>
 
         return null;
     }
+    //获取脚本
+    public T GetComponentByChild<T>(Transform parent) where T : MonoBehaviour
+    {
+        if (parent == null)
+        {
+            return null;
+        }
+
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            Transform child = parent.GetChild(i);
+            if (child.TryGetComponent(out T component))
+            {
+                return component;
+            }
+
+            T script = GetComponentByChild<T>(child);
+            if (script != null)
+            {
+                return script;
+            }
+        }
+
+        return null;
+    }
+    //
+    //获取父节点脚本
+        /// <summary>
+    /// 从当前节点开始，递归向上查找：
+    /// 1) 父节点上的组件
+    /// 2) 父节点兄弟节点上的组件
+    /// 到达场景根节点后停止。
+    /// </summary>
+    public T GetComponentByParent<T>(Transform parent) where T : Component
+    {
+        if (parent == null)
+        {
+            return null;
+        }
+
+        if (parent.TryGetComponent(out T component))
+        {
+            return component;
+        }
+
+        Transform grandParent = parent.parent;
+        if (grandParent != null)
+        {
+            for (int i = 0; i < grandParent.childCount; i++)
+            {
+                Transform sibling = grandParent.GetChild(i);
+                if (sibling == parent)
+                {
+                    continue;
+                }
+
+                if (sibling.TryGetComponent(out component))
+                {
+                    return component;
+                }
+            }
+        }
+
+        return GetComponentByParent<T>(parent.parent);
+    }
 
     //删除所有子节点
     public void RemoveAllChildren(Transform parent)

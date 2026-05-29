@@ -8,11 +8,6 @@ public class AnimationEvent : MonoBehaviour
     private Action<string> animationEvent;
     private Dictionary<string, Action<string>> customEventDict = new Dictionary<string, Action<string>>();
 
-    private void Awake()
-    {
-    
-    }
-
     private void OnAnimationEvent(string eventName)
     {
         animationEvent?.Invoke(eventName);
@@ -41,10 +36,5 @@ public class AnimationEvent : MonoBehaviour
     public void AddAnimationEvent(Action<string> action)
     {
         animationEvent += action;
-    }
-
-    private void Update()
-    {
-       
     }
 }

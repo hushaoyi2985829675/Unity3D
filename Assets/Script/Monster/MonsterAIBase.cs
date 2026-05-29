@@ -1,18 +1,34 @@
-using System.Collections;
-using System.Collections.Generic;
+using MonsterNs;
 using UnityEngine;
 
 public class MonsterAIBase : UnitAIBase
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]
+    private int monsterId;
+    protected MonsterInfo monsterInfo;
+
+    protected override void Awake()
     {
-        //mater2
+        targetSearchLayer = "Role";
+        base.Awake();
+        InitMonster(monsterId);
     }
-//测试
-    // Update is called once per frame
-    void Update()
+
+    protected override void Start()
     {
-        
+        base.Start();
+        navMeshAgent.updatePosition = false;
+    }
+
+    public virtual void InitMonster(int id)
+    {
+        monsterId = id;
+        monsterInfo = ConfigManager.Instance.GetMonsterInfoById(id);
+        SetNavSpeed(monsterInfo.moveSpeed);
+    }
+
+    public MonsterInfo GetMonsterInfo()
+    {
+        return monsterInfo;
     }
 }

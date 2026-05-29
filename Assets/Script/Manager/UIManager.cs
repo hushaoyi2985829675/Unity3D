@@ -82,7 +82,7 @@ public class UIManager : Singleton<UIManager>
                 return null;
             }
             layerScript.onEnter(data);
-            if (!layerScript.GetIsFullScreen())
+            if (!layerScript.isFullScreen)
             {
                 //加载背景遮罩
                 maskLayer = Instantiate(maskLayerRef, layerCanvas);
@@ -93,7 +93,7 @@ public class UIManager : Singleton<UIManager>
             layerList.Add(newLayerInfo); 
         }
         
-        if (!layerScript.GetIsFullScreen())
+        if (!layerScript.isFullScreen)
         {
             maskLayer.SetActive(true);
             maskLayer.transform.SetSiblingIndex(layerCanvas.childCount);
@@ -109,7 +109,7 @@ public class UIManager : Singleton<UIManager>
         layerScript.SetActive(true);
         layerScript.onShow(data);
         //如果是全屏
-        if (layerScript.GetIsFullScreen()) 
+        if (layerScript.isFullScreen) 
         {
             int index = 0;
             List<int> layerIdxList = new List<int>();
@@ -120,7 +120,7 @@ public class UIManager : Singleton<UIManager>
                 {
                     //隐藏其他全屏并关闭弹窗
                     CloseLayer(layer.name,false);
-                    if (!layer.GetIsFullScreen())
+                    if (!layer.isFullScreen)
                     {
                         layerIdxList.Add(index);
                     }
@@ -131,7 +131,7 @@ public class UIManager : Singleton<UIManager>
             {
                 int idx = layerIdxList[i];
                 LayerInfo layerInfo = layerList[idx];
-                if (!layerInfo.layer.GetIsFullScreen())
+                if (!layerInfo.layer.isFullScreen)
                 {
                     DOTween.Kill(layerInfo.layer.transform, false);
                     Destroy(layerInfo.maskLayer.gameObject);
@@ -154,7 +154,7 @@ public class UIManager : Singleton<UIManager>
         LayerInfo layerInfo = GetLayer(layerName);
         PanelBase layer = layerInfo.layer;
         layer.Hide();
-        if (layer.GetIsFullScreen())
+        if (layer.isFullScreen)
         {
             layer.onExit();
             layer.SetActive(false);
@@ -181,7 +181,7 @@ public class UIManager : Singleton<UIManager>
     // private void StackClearPop()
     // {
     //     LayerInfo layerInfo = layerStack.Peek();
-    //     if (!layerInfo.layer.GetIsFullScreen())
+    //     if (!layerInfo.layer.IsFullScreen)
     //     {
     //         layerStack.Pop();
     //         StackClearPop();

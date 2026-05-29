@@ -1,16 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 
 class EventInfo
 {
+    public GameEventType eventType;
     public int id;
     public object[] data;
 
-    public EventInfo(int id, object[] data = null)
+    public EventInfo(GameEventType type, int id, object[] data = null)
     {
+        this.eventType = type;
         this.id = id;
         this.data = data;
     }
@@ -20,10 +21,8 @@ public abstract class PanelBase : MonoBehaviour
 {
     [Header("是否是全屏页面")]
     [SerializeField]
-    private bool isFullScreen;
-    // private Dictionary<int, UINodeClass> UINodeDict = new Dictionary<int, UINodeClass>();
-    Dictionary<int, PanelBase> UINodeDict = new Dictionary<int, PanelBase>();
-    Dictionary<int, PanelBase> UILayerDict = new Dictionary<int, PanelBase>();
+    public bool isFullScreen;
+    private Dictionary<int, PanelBase> UINodeDict = new Dictionary<int, PanelBase>();
     private List<int> scheduleList = new List<int>();
     private List<int> delayList = new List<int>();
     private List<EventInfo> eventList = new List<EventInfo>();
@@ -45,22 +44,21 @@ public abstract class PanelBase : MonoBehaviour
         return AddUINode<PanelBase>(layerRef, parent, data);
     }
 
-    // protected PanelBase AddUILayer(GameObject layerRef, Transform parent, params object[] data)
-    // {
-    //     PanelBase layer = UIManager.Instance.AddUILayer(ref UILayerDict, layerRef, parent, data);
-    //     return layer;
-    // }
-
-    protected void CloseUILayer(GameObject layer)
+    protected void CloseUINode(Transform trans)
     {
-        UIManager.Instance.CloseUINode(layer);
-    }
+        if (trans == null) return;
 
-    protected void CloseUINode(Transform parent)
-    {
-        int gId = parent.gameObject.GetInstanceID();
+        // 若子物体是 PanelBase，先执行其清理（事件、定时器、子节点等）再销毁
+        PanelBase childPanel = trans.GetComponent<PanelBase>();
+        if (childPanel != null)
+        {
+            childPanel.onExit();
+            childPanel.Hide();
+        }
+
+        int gId = trans.gameObject.GetInstanceID();
         UINodeDict.Remove(gId);
-        Destroy(parent.gameObject);
+        Destroy(trans.gameObject);
     }
 
     protected void CloseNodeAllUINode(Transform parent)
@@ -77,7 +75,7 @@ public abstract class PanelBase : MonoBehaviour
     protected void AddEvent(GameEventType type, object[] data = null)
     {
         int id = EventManager.Instance.AddEvent(type, data);
-        EventInfo eventInfo = new EventInfo(id, data);
+        EventInfo eventInfo = new EventInfo(type, id, data);
         eventList.Add(eventInfo);
     }
 
@@ -85,7 +83,7 @@ public abstract class PanelBase : MonoBehaviour
     {
         foreach (EventInfo eventInfo in eventList)
         {
-            EventManager.Instance.RemoveEvent(GameEventType.ResEvent, eventInfo.id, eventInfo.data);
+            EventManager.Instance.RemoveEvent(eventInfo.eventType, eventInfo.id, eventInfo.data);
         }
     }
 
@@ -109,14 +107,7 @@ public abstract class PanelBase : MonoBehaviour
             Destroy(uiNode.gameObject);
         }
 
-        foreach (PanelBase uiNode in UILayerDict.Values)
-        {
-            UIManager.Instance.CloseUINode(uiNode.gameObject);
-            Destroy(uiNode.gameObject);
-        }
-
         UINodeDict.Clear();
-        UILayerDict.Clear();
         RemoveEvent();
         RemoveAllScheduleAndDelay();
     }

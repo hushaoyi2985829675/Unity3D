@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.RefAndLookup;
 using RoleNs;
 using UnityEngine;
 
@@ -10,9 +9,6 @@ public enum PlayerState
 {
    Idle = 0,
    Walk,
-   WalkBack,
-   WalkLeft,
-   WalkRight,
    SwordShield,
    Jump,
    Attack = 7,
@@ -21,6 +17,7 @@ public enum PlayerState
    Dizzy,
    Slide = 11,
    Chase = 12,
+   Roll = 13,
 }
 
 public class CharacterState : MonoBehaviour
@@ -28,10 +25,13 @@ public class CharacterState : MonoBehaviour
    //速度
    [SerializeField]
    private int roleId = 1;
+   [Header("转向速度")]
+   public int turnSpeed = 10;
    private RoleInfo roleInfo;
    public bool isGround;
    private bool lastGround;
    private bool isDizzy;
+   private bool isHit;
    private Vector3 velocity;
    [SerializeField]
    private RoleCamp roleCamp;
@@ -41,26 +41,23 @@ public class CharacterState : MonoBehaviour
    private List<PlayerState> playerStateList =  new List<PlayerState>();
    private Dictionary<PlayerState,int> statePriorityDict = new Dictionary<PlayerState,int>();
    private int attackStage = 0;
-   //受伤事件
-   private Action hitEvents;
-   private AnimationEvent animationEvent;
+   private Animator animator;
+
    private void Awake()
    {
-      animationEvent = GetComponent<AnimationEvent>();
+      animator = GetComponentInChildren<Animator>();
       statePriorityDict = new Dictionary<PlayerState,int>()
       {
          {PlayerState.Idle,0},
          {PlayerState.Walk,1 },
-         // {PlayerState.WalkBack,2 },
-         // {PlayerState.WalkLeft,3 },
-         // {PlayerState.WalkRight,4},
          {PlayerState.Chase,2},
+         {PlayerState.Roll,3},
          {PlayerState.SwordShield,5 },
          {PlayerState.Jump,6 },
          {PlayerState.Attack,7 },
          {PlayerState.Hit,8 },
          {PlayerState.Dizzy,8 },
-         {PlayerState.Skill,9 }
+         {PlayerState.Skill,9 },
       };
       roleInfo = ConfigManager.Instance.GetRoleInfoById(roleId);
    }
@@ -113,10 +110,6 @@ public class CharacterState : MonoBehaviour
       return lastGround;
    }
    //获取当前状态是否大于输入状态
-   public bool IsCurStatePriorityHigher(PlayerState state)
-   {
-      return statePriorityDict[playerState] > statePriorityDict[state];
-   }
 
    //添加玩家状态
    public void AddPlayerState(PlayerState state)
@@ -179,17 +172,14 @@ public class CharacterState : MonoBehaviour
    }
    #endregion
    
-   public void OnHitInput()
+   public void SetIsHit(bool isHit)
    {
-      Hit(true);
+      this.isHit = isHit;
    }
-
-   public void Hit(bool isDizzy)
+   public bool GetIsHit()
    {
-      this.isDizzy = isDizzy;
-      animationEvent.PostAnimationEvent("Hit");
+      return isHit;
    }
-
    public void ClearState()
    {
       for (int i = playerStateList.Count - 1; i >= 0; i--)
@@ -206,5 +196,47 @@ public class CharacterState : MonoBehaviour
    public RoleInfo GetRoleInfo()
    {
       return roleInfo;
+   }
+
+   public void SetAnimatorTrigger(string triggerName)
+   {
+      if(string.IsNullOrEmpty(triggerName))
+      {
+         return;
+      }
+      animator?.SetTrigger(triggerName);
+   }
+   public void SetAnimatorFloat(string triggerName, float value)
+   {
+      animator?.SetFloat(triggerName, value);
+   }
+   public void SetAnimatorBool(string triggerName, bool value)
+   {
+      animator?.SetBool(triggerName, value);
+   }
+   public void PlayAnimation(string animationName, float transition = 0.25f)
+   {
+      // if(animator.GetCurrentAnimatorStateInfo(0).IsName(animationName))
+      // {
+      //    return;
+      // }
+      animator.CrossFade(animationName, transition);
+      animator?.Play(animationName);
+   }
+   private void LateUpdate()
+   {
+      // if (animator == null || roleInfo == null) return;
+      // float moveSpeed = roleInfo.moveSpeed;
+      // if (moveSpeed <= 0f) moveSpeed = 1f;
+      // animator.SetBool("Ground", isGround);
+      // animator.SetBool("LastGround", lastGround);
+      // if (isGround && !lastGround && playerState == PlayerState.Jump)
+      //    animator.SetTrigger("JumpEndTrigger");
+      // animator.SetFloat("VelocityZ", velocity.z / moveSpeed);
+      // animator.SetFloat("VelocityX", velocity.x / moveSpeed);
+      // animator.SetFloat("VelocityZAbs", Mathf.Abs(velocity.z) / moveSpeed);
+      // animator.SetFloat("VelocityXAbs", Mathf.Abs(velocity.x) / moveSpeed);
+      // animator.SetInteger("AttackStage", attackStage);
+      // animator.SetInteger("State", (int)playerState);
    }
 }

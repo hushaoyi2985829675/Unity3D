@@ -70,8 +70,8 @@ public class RoleLayer : PanelBase
 
     private void RefreshUI()
     {
-        CloseUILayer(roleNode?.gameObject);
-        CloseUILayer(roleDescNode?.gameObject);
+        CloseUINode(roleNode?.transform);
+        CloseUINode(roleDescNode?.transform);
         //角色
         if (selTag == 1)
         {

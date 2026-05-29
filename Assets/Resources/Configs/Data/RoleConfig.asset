@@ -22,9 +22,9 @@ MonoBehaviour:
     hp: 100
     moveSpeed: 4
     runSpeed: 6
-    jumpSpeed: 5
+    jumpSpeed: 3
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 2
     name: "\u7FE1\u7FE0\u54E8\u5175"
@@ -37,7 +37,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 3
     name: "\u82CD\u89D2\u7A81\u51FB\u8005"
@@ -50,7 +50,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 4
     name: "\u8910\u94C1\u89D2\u536B"
@@ -63,7 +63,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 5
     name: "\u8D64\u53D1\u884C\u8005"
@@ -76,7 +76,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 6
     name: "\u591C\u5203\u6E38\u9A91"
@@ -89,7 +89,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 7
     name: "\u91D1\u8292\u65C5\u8005"
@@ -102,7 +102,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 8
     name: "\u84DD\u89D2\u7684\u96F7\u5C14"
@@ -115,7 +115,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 9
     name: "\u7EA2\u7FFC\u7684\u83B1\u4FEE"
@@ -128,7 +128,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 10
     name: "\u96F7\u5965"
@@ -141,7 +141,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 11
     name: "\u7D2B\u5F71\u730E\u624B"
@@ -154,7 +154,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 12
     name: "\u9752\u5CA9\u7684\u51EF\u6069"
@@ -167,7 +167,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 13
     name: "\u6797\u91CE\u6E38\u730E\u8005"
@@ -180,7 +180,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 14
     name: "\u84DD\u7FCE\u536B\u6258\u4F26"
@@ -193,7 +193,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 15
     name: "\u8D64\u53D1\u5F13\u624B\u7F57\u4F0A"
@@ -206,7 +206,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 16
     name: "\u7A79\u9876\u7684\u51EF\u56E0"
@@ -219,7 +219,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 17
     name: "\u70EC\u706B\u730E\u624B"
@@ -232,7 +232,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 18
     name: "\u76D6\u91CC\u514B"
@@ -245,7 +245,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 19
     name: "\u7D2B\u5E3D\u7684\u6885\u6797"
@@ -258,7 +258,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 20
     name: "\u91D1\u7802\u5DEB\u65C5"
@@ -271,7 +271,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 21
     name: "\u7A79\u9876\u5492\u672F\u5E08"
@@ -284,7 +284,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 22
     name: "\u8D64\u7FFC\u7684\u96F7\u7EB3"
@@ -297,7 +297,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 23
     name: "\u6D1B\u8428"
@@ -310,7 +310,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 24
     name: "\u5251\u76FE1"
@@ -323,7 +323,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 25
     name: "\u5251\u76FE2"
@@ -336,7 +336,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 26
     name: "\u5251\u76FE3"
@@ -349,7 +349,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 27
     name: "\u5251\u76FE4"
@@ -362,7 +362,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 28
     name: "\u5251\u76FE5"
@@ -375,7 +375,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 29
     name: "\u5251\u76FE6"
@@ -388,7 +388,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 30
     name: "\u5251\u76FE7"
@@ -401,7 +401,7 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1
   - roleId: 31
     name: "\u5251\u76FE8"
@@ -414,5 +414,5 @@ MonoBehaviour:
     runSpeed: 6
     jumpSpeed: 5
     idleTime: 2
-    attackDic: 4.5
+    attackDic: 2.4
     attackSpeed: 1

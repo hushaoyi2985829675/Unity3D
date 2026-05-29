@@ -1,294 +1,144 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using RoleNs;
 using UnityEngine;
 
-public class RoleState
-{
-    public Action OnEnter;
-    public Action OnUpdate;
-    public Action OnExit;
-
-    public RoleState(Action onEnter, Action onUpdate, Action onExit)
-    {
-        OnEnter = onEnter;
-        OnUpdate = onUpdate;
-        OnExit = onExit;
-    }
-
-    public void Enter()
-    {
-        OnEnter?.Invoke();
-    }
-
-    public void Update()
-    {
-        OnUpdate?.Invoke();
-    }
-
-    public void Exit()
-    {
-        OnExit?.Invoke();
-    }
-}
-
-public class RoleBehaviorLogic : MonoBehaviour
+public class RoleBehaviorLogic : UnitBehaviorLogicBase
 {
     private CharacterAIBase characterAI;
-    private Animator animator;
-    private AnimationEvent animationEvent;
-    //状态机
-    private Dictionary<PlayerState, RoleState> roleStateList;
+    private RoleInfo roleInfo;
 
-    [SerializeField]
-    private PlayerState curState = PlayerState.Idle;
-
-    //状态
-    private PlayerState playerState;
-
-    //属性
-    protected float idleTime = 2;
-    protected float localIdleTime;
-    protected RoleInfo roleInfo;
-    private GameObject target;
-
-    //追击更新频率
-    private float chaseUpdateInterval = 0.3f;
-    private float localChaseUpdateInterval = 0;
-
-    //攻击间隔
-    [Header("攻击间隔")]
-    [SerializeField]
-    private float attackInterval = 0.5f;
-    private float localAttackInterval = 0;
-    private bool isAttack;
-
-    private void Awake()
+    private float rollSpped = 3;
+    private bool isRolling = false;
+    
+    protected override void Awake()
     {
-        roleStateList = new Dictionary<PlayerState, RoleState>();
+        base.Awake();
         characterAI = GetComponent<CharacterAIBase>();
-        animator = GetComponent<Animator>();
-        animationEvent = GetComponent<AnimationEvent>();
     }
 
-    void Start()
+    protected override void Start()
     {
+        animationEvent.AddAnimationEvent(OnRoleAnimationAction);
         roleInfo = characterAI.GetRoleInfo();
-        idleTime = roleInfo.idleTime;
-        roleStateList = new Dictionary<PlayerState, RoleState>();
-        roleStateList.Add(PlayerState.Idle,new RoleState(IdleEnter, IdleUpdate, IdleExit));
-        roleStateList.Add(PlayerState.Walk,new RoleState(OnWalkEnter, OnWalkUpdate, OnWalkExit));
-        roleStateList.Add(PlayerState.Chase,new RoleState(ChaseEnter, ChaseUpdate, ChaseExit));
-        roleStateList.Add(PlayerState.Attack,new RoleState(AttackEnter, AttackUpdate, AttackExit));
-        roleStateList[curState].Enter();
-        animationEvent.AddAnimationEvent(OnAnimationAction);
+        base.Start();
+        unitStateList.Add(PlayerState.Roll, new UnitState(OnRollEnter, OnRollUpdate, OnRollExit));
     }
-
-    private void Update()
+    
+    protected override void Update()
     {
-        if (localAttackInterval > 0f)
-        {
-            localAttackInterval -= Time.deltaTime;
-            if (localAttackInterval <= 0f)
-            {
-                localAttackInterval = 0f;
-                characterAI.SetAttackStage(1);
-            }
-        }
-        ChangeState(playerState);
-        roleStateList[curState].OnUpdate();
+        base.Update();
     }
 
-    void OnAnimationAction(string eventName)
+    private void OnRoleAnimationAction(string eventName)
     {
         switch (eventName)
         {
-            case "AttackEnd":
-                isAttack = false;
-                localAttackInterval = attackInterval;
+            case "RollMoveStart":
+               isRolling = true;
+                break;
+            case "RollMoveEnd":
+                isRolling = false;
+                break;
+            case "RollEnd":
+                SetPlayerState(PlayerState.Idle);
                 break;
         }
     }
-
-    #region IdleSate
-
-    //待机状态
-    public virtual void IdleEnter()
+    private void OnRollEnter()
     {
+        
     }
 
-    public virtual void IdleUpdate()
+    private void OnRollUpdate()
     {
-        if (characterAI.GetMonsterTarget() != null)
+        if(isRolling)
         {
-            playerState = PlayerState.Chase;
+            int dir = characterAI.GetRollDirection();
+            Vector3 moveDir = Vector3.zero;
+            switch(dir)
+            {
+                case 1:
+                    moveDir = new Vector3(0, 0, -1);
+                    break;
+                case 2:
+                    moveDir = new Vector3(1, 0, 0);
+                    break;
+                case 3:
+                    moveDir = new Vector3(-1, 0, 0);
+                    break;
+            }
+            Vector3 move = Quaternion.Euler(new Vector3(0, transform.rotation.eulerAngles.y, 0)) * moveDir;
+            characterAI.SetNavMove(move * (rollSpped * Time.deltaTime));
+        }
+    }
+
+
+    //滚动
+    private void OnRollExit()
+    {
+        isRolling = false;
+    }
+    protected override float GetIdleTime()
+    {
+        return roleInfo.idleTime;
+    }
+
+    protected override float GetMoveSpeed()
+    {
+        return roleInfo.moveSpeed;
+    }
+
+    protected override float GetRunSpeed()
+    {
+        return roleInfo.runSpeed;
+    }
+
+    protected override float GetAttackDistance()
+    {
+        return roleInfo.attackDic;
+    }
+    public override void TriggerHit()
+    {
+        base.TriggerHit();
+        if (playerState == PlayerState.SwordShield)
+        {
+            //扣血
             return;
         }
-        localIdleTime += Time.deltaTime;
-        if (localIdleTime >= idleTime)
+        if (playerState == PlayerState.Skill) 
         {
-            playerState = PlayerState.Walk;
-        }
-    }
-
-    public virtual void IdleExit()
-    {
-        localIdleTime = 0;
-    }
-
-    #endregion
-
-    #region WalkSate
-
-    public virtual void OnWalkEnter()
-    {
-        //随机出一个坐标
-        Vector3 pos = Ui.Instance.GetRandomPointInCircle(transform.position, 10);
-        characterAI.SetNavSpeed(roleInfo.moveSpeed);
-        characterAI.SetStopDistance(0);
-        characterAI.Move(new Vector3(transform.TransformPoint(pos).x, pos.y, transform.TransformPoint(pos).z));
-    }
-
-    public virtual void OnWalkUpdate()
-    {
-        if (characterAI.GetMonsterTarget() != null)
-        {
-            playerState = PlayerState.Chase;
-            return;
-        }
-        if (characterAI.CheckIfReachedDestination())
-        {
-            playerState = PlayerState.Idle;
-        }
-    }
-
-    public virtual void OnWalkExit()
-    {
-        characterAI.StopMove();
-    }
-
-    #endregion
-
-    #region ChaseState
-
-    //追击状态
-
-    public virtual void ChaseEnter()
-    {
-        target = characterAI.GetMonsterTarget();
-        if (target == null)
-        {
-            playerState = PlayerState.Idle;
-        }
-        else
-        {
-            characterAI.SetNavSpeed(roleInfo.runSpeed);
-            characterAI.SetStopDistance(roleInfo.attackDic);
-            characterAI.Move(target.transform.position);
-            localChaseUpdateInterval = 0;
-        }
-    }
-
-    public virtual void ChaseUpdate()
-    {
-        target = characterAI.GetMonsterTarget();
-        if (target != null)
-        {
-            localChaseUpdateInterval = localChaseUpdateInterval + Time.deltaTime;
-            //不要每帧更新
-            if (localChaseUpdateInterval >= chaseUpdateInterval)
-            {
-                characterAI.Move(target.transform.position);
-                localChaseUpdateInterval = 0;
-            }
-            if (FightTool.IsTargetInRange(transform, roleInfo.attackDic, target))
-            {
-                //攻击
-                playerState = PlayerState.Attack;
-            }
-        }
-        else
-        {
-            playerState = PlayerState.Idle;
-        }
-    }
-
-    public virtual void ChaseExit()
-    {
-        localChaseUpdateInterval = 0;
-    }
-
-    #endregion
-
-    #region AttackState
-
-    //攻击状态
-
-    public virtual void AttackEnter()
-    {
-
-    }
-
-    public virtual void AttackUpdate()
-    { 
-        if(!isAttack)
-        {
-            if (FightTool.IsTargetInRange(transform, roleInfo.attackDic, target))
-            {
-                isAttack = true;
-                if (localAttackInterval > 0f && characterAI.GetAttackStage() < 2)
-                {  
-                    characterAI.SetAttackStage(characterAI.GetAttackStage() + 1);
-                }
-                else
-                {
-                    characterAI.SetAttackStage(1);
-                }
-                localAttackInterval = 0f;
-            }
-            else
-            {
-                playerState = PlayerState.Chase;
-            }
-        }
-    }
-
-    public virtual void AttackExit()
-    {
-        localAttackInterval = 0;
-        isAttack = false;
-    }
-
-    #endregion
-
-    //切换状态
-    public virtual void ChangeState(PlayerState state)
-    {
-        if (state == curState)
-        {
+            //扣血
             return;
         }
 
-        if (roleStateList.ContainsKey(curState))
+        if(playerState == PlayerState.Roll)
         {
-            RoleState roleState = roleStateList[curState];
-            roleState.OnExit();
+            return;
         }
-
-        curState = state;
-        roleStateList[curState].OnEnter();
-        animator.SetInteger("State", (int)curState);
+            //判断是否进入受伤动画
+        if(!isAttackDetect || localHitInterval <= 0)
+        {
+            playerState = PlayerState.Hit;
+        }
     }
 
-    // void OnDrawGizmos()
-    // {
-    //     // if (!Application.isPlaying)
-    //     // {
-    //     //     return;
-    //     // }
-    //     Gizmos.color = Color.blue;
-    //     // 可选：绘制中心点（人物位置）
-    //     Gizmos.DrawWireSphere(transform.position, 8f);
-    // }
+    
+      //面对攻击时做出反应
+    public override void ReactToDanger()
+    {
+        if(isAttackDetect)
+        {
+            return;
+        }
+        //随机是否进行反应
+        if(UnityEngine.Random.Range(0, 100) > characterAI.ReactValue)
+        {
+            return;
+        }
+        //随机一个方向进行翻滚
+        int rollDirection = UnityEngine.Random.Range(1, 4);
+        characterAI.SetRollDirection(rollDirection);
+        SetPlayerState(PlayerState.Roll);
+    }
 }
